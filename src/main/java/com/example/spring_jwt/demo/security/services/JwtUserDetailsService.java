@@ -17,7 +17,7 @@ public class JwtUserDetailsService implements UserDetailsService {
             return new User("codeyourempire", "$2a$10$slYQmyNdGzTn7ZLBXBChFOC9f6kFjAqPhccnP6DxlWXx2lPk1C3G6",
                     new ArrayList<>());
         } else {
-            throw new UsernameNotFoundException("Cannot found user with name " + username);
+            throw new UsernameNotFoundException("Cannot find user with name " + username);
         }
     }
 }
