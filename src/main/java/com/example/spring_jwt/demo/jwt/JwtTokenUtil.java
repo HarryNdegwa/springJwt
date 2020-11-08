@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+// import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -20,9 +21,12 @@ public class JwtTokenUtil implements Serializable {
     /**
      *
      */
+    // @Autowired
+    // UserDetails userDetails;
+
     private static final long serialVersionUID = 1L;
 
-    public static final int jwtExpires = 5 * 60 * 60;
+    public static final long jwtExpires = 5 * 60 * 60;
 
     @Value("${jwt.secret}")
     private String jwtSecret;
@@ -55,7 +59,8 @@ public class JwtTokenUtil implements Serializable {
 
     // generate token for user
     public String generateToken(UserDetails userDetails) {
-        Map<String, Object> claims = new HashMap<>();
+        // Map is an interface and HashMap is a class that implements it
+        Map<String, Object> claims = new HashMap<String, Object>();
         return doGenerateToken(claims, userDetails.getUsername());
     }
 
