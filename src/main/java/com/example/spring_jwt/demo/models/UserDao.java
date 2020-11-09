@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class UserDao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

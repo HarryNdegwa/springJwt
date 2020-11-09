@@ -2,6 +2,10 @@ package com.example.spring_jwt.demo.security.services;
 
 import java.util.ArrayList;
 
+import com.example.spring_jwt.demo.models.UserDao;
+import com.example.spring_jwt.demo.repositories.UserRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,6 +15,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
 
+    @Autowired
+    private UserRepository repository;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         if ("codeyourempire".equals(username)) {
@@ -19,5 +26,9 @@ public class JwtUserDetailsService implements UserDetailsService {
         } else {
             throw new UsernameNotFoundException("Cannot find user with name " + username);
         }
+    }
+
+    public void saveUser(UserDao user) {
+        repository.save(user);
     }
 }
