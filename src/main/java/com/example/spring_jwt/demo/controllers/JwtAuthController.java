@@ -3,6 +3,7 @@ package com.example.spring_jwt.demo.controllers;
 import com.example.spring_jwt.demo.jwt.JwtTokenUtil;
 import com.example.spring_jwt.demo.models.JwtRequest;
 import com.example.spring_jwt.demo.models.JwtResponse;
+import com.example.spring_jwt.demo.models.UserDao;
 import com.example.spring_jwt.demo.security.services.JwtUserDetailsService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class JwtAuthController {
     private JwtTokenUtil jwtTokenUtil;
 
     @Autowired
-    private JwtUserDetailsService jwtUserDetailsService;
+    private JwtUserDetailsService userDetailsService;
 
     private void authenticate(String username, String password) throws Exception {
         try {
@@ -45,11 +46,16 @@ public class JwtAuthController {
 
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 
-        final UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 
         final String token = jwtTokenUtil.generateToken(userDetails);
 
         return ResponseEntity.ok(new JwtResponse(token));
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody UserDao user) throws Exception {
+        return ResponseEntity.ok(userDetailsService.saveUser(user));
     }
 
 }

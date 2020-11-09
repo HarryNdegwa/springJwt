@@ -28,7 +28,8 @@ public class JwtUserDetailsService implements UserDetailsService {
         }
     }
 
-    public void saveUser(UserDao user) {
-        repository.save(user);
+
+    public UserDao saveUser(UserDao user) {
+        return repository.save(user);
     }
 }
