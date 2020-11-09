@@ -26,7 +26,7 @@ public class JwtTokenUtil implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public static final long jwtExpires = 5 * 60 * 60;
+    public static final long jwtExpires = 5 * 60;
 
     @Value("${jwt.secret}")
     private String jwtSecret;
@@ -48,6 +48,9 @@ public class JwtTokenUtil implements Serializable {
 
     // for retrieving any info from the token we will need the secret
     private Claims getAllClaimsFromToken(String token) {
+        Claims c = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
+
+        System.out.println(c);
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
     }
 
@@ -79,6 +82,7 @@ public class JwtTokenUtil implements Serializable {
     // validate token
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = getUsernameFromToken(token);
+        System.out.println(username.equals(userDetails.getUsername()) && !isTokenExpired(token));
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 }

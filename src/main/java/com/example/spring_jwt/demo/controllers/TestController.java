@@ -12,16 +12,17 @@ public class TestController {
 
     @GetMapping("/")
     public String test() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // Authentication authentication =
+        // SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication != null) {
-            String currentUser = authentication.getName();
+        // if (authentication != null) {
+        // String currentUser = authentication.getName();
 
-            System.out.println("Auth user is " + currentUser);
+        // System.out.println("Auth user is " + currentUser);
 
-        }
+        // }
 
-        System.out.println(authentication);
+        // System.out.println(authentication);
         return "Test";
     }
 

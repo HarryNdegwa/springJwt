@@ -17,7 +17,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import org.springframework.util.StringUtils;
+import io.jsonwebtoken.ExpiredJwtException;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
@@ -31,47 +31,45 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
+        final String requestTokenHeader = request.getHeader("Authorization");
 
-        String token = parseJwt(request);
+        String username = null;
 
-        if (token != null) {
-            String username = jwtTokenUtil.getUsernameFromToken(token);
+        String token = null;
 
+        if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
+
+            token = requestTokenHeader.substring(7);
+
+            try {
+                username = jwtTokenUtil.getUsernameFromToken(token);
+            } catch (IllegalArgumentException e) {
+                System.out.println(e);
+                System.out.println("Unable to get JWT token");
+            } catch (ExpiredJwtException e) {
+                System.out.println(e);
+                System.out.println("Token expired!");
+            }
+        }
+        // System.out.println("Username is " + username);
+
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
             if (jwtTokenUtil.validateToken(token, userDetails)) {
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+                        username, userDetails.getPassword(), userDetails.getAuthorities());
 
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username,
-                        userDetails.getPassword(), userDetails.getAuthorities());
+                usernamePasswordAuthenticationToken
+                        .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                System.out.println("Auth is " + authentication);
-
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 
             }
-
         }
 
         chain.doFilter(request, response);
 
-    }
-
-    private String parseJwt(HttpServletRequest request) {
-        String headerAuth = request.getHeader("Authorization");
-
-        System.out.println(headerAuth);
-
-        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
-            String myToken = headerAuth.substring(7, headerAuth.length());
-
-            System.out.println(myToken);
-
-            return headerAuth.substring(7, headerAuth.length());
-        }
-
-        return null;
     }
 
 }
