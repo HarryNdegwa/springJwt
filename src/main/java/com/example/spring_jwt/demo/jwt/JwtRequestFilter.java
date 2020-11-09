@@ -31,40 +31,20 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-        // final String requestTokenHeader = request.getHeader("Authorization");
 
         String token = parseJwt(request);
-
-        // if (StringUtils.hasText(requestTokenHeader) &&
-        // requestTokenHeader.startsWith("Bearer ")) {
-        // return requestTokenHeader.substring(7, requestTokenHeader.length());
-        // }
-
-        // if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
-
-        // token = requestTokenHeader.substring(7);
-
-        // try {
-        // username = jwtTokenUtil.getUsernameFromToken(token);
-        // } catch (IllegalArgumentException e) {
-        // System.out.println(e);
-        // System.out.println("Unable to get JWT token");
-        // } catch (ExpiredJwtException e) {
-        // System.out.println(e);
-        // System.out.println("Token expired!");
-        // }
-        // }
 
         if (token != null) {
             String username = jwtTokenUtil.getUsernameFromToken(token);
 
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
-            if (token != null && jwtTokenUtil.validateToken(token, userDetails)) {
+            if (jwtTokenUtil.validateToken(token, userDetails)) {
 
-                // if (jwtTokenUtil.validateToken(token, userDetails)) {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username,
                         userDetails.getPassword());
+
+                System.out.println("Auth is " + authentication);
 
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
@@ -81,7 +61,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private String parseJwt(HttpServletRequest request) {
         String headerAuth = request.getHeader("Authorization");
 
+        System.out.println(headerAuth);
+
         if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
+            String myToken = headerAuth.substring(7, headerAuth.length());
+
+            System.out.println(myToken);
+
             return headerAuth.substring(7, headerAuth.length());
         }
 
