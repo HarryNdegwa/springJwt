@@ -1,6 +1,7 @@
 package com.example.spring_jwt.demo.security.services;
 
 import java.util.ArrayList;
+// import java.util.Optional;
 
 import com.example.spring_jwt.demo.models.UserDao;
 import com.example.spring_jwt.demo.repositories.UserRepository;
@@ -20,14 +21,15 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        if ("codeyourempire".equals(username)) {
-            return new User("codeyourempire", "$2a$10$slYQmyNdGzTn7ZLBXBChFOC9f6kFjAqPhccnP6DxlWXx2lPk1C3G6",
-                    new ArrayList<>());
-        } else {
+
+        UserDao user = repository.findByUsername(username);
+
+        if (user == null) {
             throw new UsernameNotFoundException("Cannot find user with name " + username);
+        } else {
+            return new User(user.getUsername(), user.getPassword(), new ArrayList<>());
         }
     }
-
 
     public UserDao saveUser(UserDao user) {
         return repository.save(user);
