@@ -58,6 +58,8 @@ public class JwtAuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserDao user) throws Exception {
+        System.out.println(user.getUsername());
+        System.out.println(user.getPassword());
         return ResponseEntity.ok(userDetailsService.saveUser(user));
     }
 

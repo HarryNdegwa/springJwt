@@ -43,6 +43,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
             try {
                 username = jwtTokenUtil.getUsernameFromToken(token);
+
+                System.out.println("Helloo");
             } catch (IllegalArgumentException e) {
                 System.out.println(e);
                 System.out.println("Unable to get JWT token");

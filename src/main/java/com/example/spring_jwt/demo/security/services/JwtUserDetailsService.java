@@ -38,6 +38,8 @@ public class JwtUserDetailsService implements UserDetailsService {
     public UserDao saveUser(UserDao user) {
         UserDao newUser = new UserDao();
         newUser.setUsername(user.getUsername());
+        System.out.println("Username is " + user.getUsername());
+        System.out.println("Password is " + user.getPassword());
         newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
         return repository.save(newUser);
     }
