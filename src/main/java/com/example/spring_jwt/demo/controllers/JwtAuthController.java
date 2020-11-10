@@ -55,7 +55,6 @@ public class JwtAuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserDao user) throws Exception {
-        System.out.println(user);
         return ResponseEntity.ok(userDetailsService.saveUser(user));
     }
 
