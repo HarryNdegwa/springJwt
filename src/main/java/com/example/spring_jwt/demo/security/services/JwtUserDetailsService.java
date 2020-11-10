@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,6 +19,9 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     @Autowired
     private UserRepository repository;
+
+    @Autowired
+    private PasswordEncoder bcryptEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -32,6 +36,9 @@ public class JwtUserDetailsService implements UserDetailsService {
     }
 
     public UserDao saveUser(UserDao user) {
-        return repository.save(user);
+        UserDao newUser = new UserDao();
+        newUser.setUsername(user.getUsername());
+        newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
+        return repository.save(newUser);
     }
 }

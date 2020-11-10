@@ -33,7 +33,10 @@ public class JwtAuthController {
 
     private void authenticate(String username, String password) throws Exception {
         try {
+            System.out.println("Before!");
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+            System.out.println("After!");
+
         } catch (DisabledException e) {
             throw new Exception("USER_DISABLED", e);
         } catch (BadCredentialsException e) {
