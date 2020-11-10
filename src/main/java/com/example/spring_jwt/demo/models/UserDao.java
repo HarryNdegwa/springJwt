@@ -14,8 +14,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class UserDao {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
     @Column
     private String username;
