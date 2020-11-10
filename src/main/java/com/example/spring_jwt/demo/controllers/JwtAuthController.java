@@ -33,14 +33,11 @@ public class JwtAuthController {
 
     private void authenticate(String username, String password) throws Exception {
         try {
-            System.out.println("Before!");
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-            System.out.println("After!");
-
         } catch (DisabledException e) {
             throw new Exception("USER_DISABLED", e);
         } catch (BadCredentialsException e) {
-            throw new Exception("BAD_CREDENTIALS", e);
+            throw new Exception("INVALID_CREDENTIALS", e);
         }
     }
 
@@ -58,8 +55,7 @@ public class JwtAuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserDao user) throws Exception {
-        System.out.println(user.getUsername());
-        System.out.println(user.getPassword());
+        System.out.println(user);
         return ResponseEntity.ok(userDetailsService.saveUser(user));
     }
 

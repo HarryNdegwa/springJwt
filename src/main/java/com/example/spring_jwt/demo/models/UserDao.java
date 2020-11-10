@@ -7,8 +7,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
 @Table(name = "users")
 public class UserDao {
@@ -21,7 +19,6 @@ public class UserDao {
     private String username;
 
     @Column
-    @JsonIgnore
     private String password;
 
     public long getId() {
@@ -48,4 +45,8 @@ public class UserDao {
         this.password = password;
     }
 
+    @Override
+    public String toString() {
+        return "User " + this.username + " " + this.password;
+    }
 }
